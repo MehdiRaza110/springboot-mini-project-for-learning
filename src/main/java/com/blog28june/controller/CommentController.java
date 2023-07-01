@@ -6,8 +6,10 @@ import com.blog28june.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -17,7 +19,10 @@ public class CommentController {
 private CommentService commentService;
 
     @PostMapping("/{postId}")
-    ResponseEntity<CommentDto> createComment(@PathVariable long postId,@RequestBody CommentDto commentDto){
+    ResponseEntity<?> createComment(@PathVariable long postId, @Valid @RequestBody CommentDto commentDto, BindingResult result){
+        if(result.hasErrors()){
+            return new ResponseEntity<>(result.getFieldError().getDefaultMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         System.out.println(commentDto.getBody());
         CommentDto dto = commentService.createComment(postId, commentDto);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);

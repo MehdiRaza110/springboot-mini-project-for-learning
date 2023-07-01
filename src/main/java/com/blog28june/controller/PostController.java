@@ -6,8 +6,10 @@ import com.blog28june.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,7 +21,10 @@ private PostService postService;
 
 
     @PostMapping
-    ResponseEntity<PostDto> saveData(@RequestBody PostDto postDto){
+    ResponseEntity<?> saveData(@Valid @RequestBody PostDto postDto , BindingResult result){
+        if(result.hasErrors()){
+            return new ResponseEntity<>(result.getFieldError().getDefaultMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         PostDto dto=postService.saveData(postDto);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
