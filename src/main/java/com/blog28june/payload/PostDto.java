@@ -1,4 +1,4 @@
-package com.blogapp.payload;
+package com.blog28june.payload;
 
 import lombok.Data;
 

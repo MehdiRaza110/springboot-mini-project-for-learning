@@ -1,12 +1,14 @@
-package com.blogapp.entity;
+package com.blog28june.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "Comments")
+@Table(name = "comments")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Comment {
@@ -14,11 +16,6 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    //first for the table and second for the variable...
-    @ManyToOne(fetch=FetchType.LAZY)  //load only when is need..(lazy)..
-    @JoinColumn(name = "post_id", nullable=false) //join the column..
-    private Post post;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -28,4 +25,10 @@ public class Comment {
 
     @Column(name = "body", nullable = false)
     private String body;
+
+    //first for the table and second for the variable...
+    @ManyToOne(fetch=FetchType.LAZY)  //
+    @JoinColumn(name = "post_id", nullable=false)
+    private Post post;
+
 }
