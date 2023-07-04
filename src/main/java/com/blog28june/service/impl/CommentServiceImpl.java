@@ -50,6 +50,47 @@ public class CommentServiceImpl implements CommentService {
         return collect;
     }
 
+    @Override
+    public String deleteComments(long postId, long id) {
+        postRepo.findById(postId).orElseThrow(
+                () -> new ResourceNotFoundException(postId)
+        );
+        commentRepo.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException(id)
+        );
+        commentRepo.deleteById(id);
+        return "Comment deleted successfully!!";
+    }
+
+    @Override
+    public CommentDto getOneComments(long postId, long id) {
+        postRepo.findById(postId).orElseThrow(
+                () -> new ResourceNotFoundException(postId)
+        );
+        Comment comment = commentRepo.findByIdAndPostId(id, postId);
+        if(comment==null){
+            throw new ResourceNotFoundException(id);
+        }
+        return mapToDto(comment);
+    }
+
+    @Override
+    public CommentDto updateComments(long postId, long id, CommentDto commentDto) {
+        Comment comment = mapToEntity(commentDto);
+        Post post = postRepo.findById(postId).orElseThrow(
+                () -> new ResourceNotFoundException(postId)
+        );
+        Comment byIdAndPostId = commentRepo.findByIdAndPostId(id, postId);
+        if(byIdAndPostId==null){
+            throw new ResourceNotFoundException(id);
+        }
+        comment.setId(id);
+        comment.setPost(post);
+        Comment save = commentRepo.save(comment);
+        CommentDto results = mapToDto(save);
+        return results;
+    }
+
     Comment mapToEntity(CommentDto commentDto){
         return modelMapper.map(commentDto, Comment.class);
     }
