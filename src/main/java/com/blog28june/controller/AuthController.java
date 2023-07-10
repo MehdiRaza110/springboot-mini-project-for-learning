@@ -2,6 +2,7 @@ package com.blog28june.controller;
 
 import com.blog28june.entity.Role;
 import com.blog28june.entity.User;
+import com.blog28june.payload.RoleDto;
 import com.blog28june.payload.SignUpDto;
 import com.blog28june.repository.RoleRepository;
 import com.blog28june.repository.UserRepository;
@@ -12,6 +13,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -43,10 +49,10 @@ public class AuthController {
         user.setName(signUpDto.getName());
         user.setUsername(signUpDto.getUsername());
         user.setEmail(signUpDto.getEmail());
-        user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));//encode password here..
 
-//        Role roles = roleRepository.findByName("ROLE_ADMIN").get();
-//        user.setRoles(Collections.singleton(roles));
+        Role roles = roleRepository.findById(1l).get();
+        user.setRoles(Collections.singleton(roles));
 
         User save = userRepository.save(user);
         return new ResponseEntity<>(save,HttpStatus.OK);
