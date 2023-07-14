@@ -3,8 +3,10 @@ package com.blog28june.repository;
 import com.blog28june.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User,Long> {
-    boolean existsByUsername(String username);
+import java.util.Optional;
 
-    boolean existsByEmail(String email);
+public interface UserRepository extends JpaRepository<User,Long> {
+    Optional<User> findByUsernameOrEmail(String username, String email);
+    Boolean existsByUsername(String username);
+    Boolean existsByEmail(String email);
 }
